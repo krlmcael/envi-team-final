@@ -1,204 +1,101 @@
-// ==========================================
-// 🗂️ SYSTEM STATE & DATA PERSISTENCE
-// ==========================================
-let users = JSON.parse(localStorage.getItem('envi_users')) || [
-    { username: 'admin', pass: 'admin123', name: 'System Admin', role: 'admin', status: 'Approved' }
-];
+// Database Simulation
 let records = JSON.parse(localStorage.getItem('scrap_db')) || [];
 let currentUser = null;
 let charts = {};
 
-// ==========================================
-// 🔐 AUTHENTICATION LOGIC
-// ==========================================
+// 1. LOGIN LOGIC
 function login() {
-    const userIn = document.getElementById('login-user').value;
-    const passIn = document.getElementById('login-pass').value;
-    const found = users.find(u => u.username === userIn && u.pass === passIn);
+    const u = document.getElementById('login-user').value;
+    const p = document.getElementById('login-pass').value;
 
-    if (found) {
-        if (found.status === 'Disapproved') {
-            alert("❌ Access Denied: Your account is currently deactivated.");
-            return;
-        }
-        currentUser = found;
-        alert(`✅ Welcome, ${found.name}! Login successful.`);
-        
-        document.getElementById('login-section').classList.add('hidden');
-        document.getElementById('logout-btn').classList.remove('hidden');
-        updateNav();
-        showPage(found.role === 'admin' ? 'admin-dashboard' : 'user-add-scrap');
-    } else { 
-        alert("⚠️ Invalid Credentials: Please check your username or password."); 
+    if (u === 'admin' && p === 'admin123') {
+        currentUser = { name: 'Admin', role: 'admin' };
+    } else if (u.startsWith('user') && p === '1234') {
+        currentUser = { name: u, role: 'user' };
+    } else {
+        return alert("❌ Maling credentials!");
     }
-}
 
-function logout() {
-    if (confirm("Are you sure you want to log out?")) {
-        alert("👋 Logged out successfully.");
-        location.reload();
-    }
-}
-
-// ==========================================
-// 🚀 NAVIGATION LOGIC
-// ==========================================
-function showPage(id) {
-    document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
-    
-    if(id === 'admin-dashboard') { renderCharts(); renderAdminTable(); }
-    if(id === 'admin-users') renderUserList();
-    if(id === 'user-view-scrap') renderUserRecords();
+    alert(`✅ Welcome ${currentUser.name}! Login successful.`);
+    document.getElementById('login-section').classList.add('hidden');
+    document.getElementById('logout-btn').classList.remove('hidden');
+    updateNav();
+    showPage(currentUser.role === 'admin' ? 'admin-dashboard' : 'user-add-scrap');
 }
 
 function updateNav() {
     const nav = document.getElementById('nav-links');
-    if(currentUser.role === 'admin') {
-        nav.innerHTML = `
-            <button onclick="showPage('admin-dashboard')">Analytics</button>
-            <button onclick="showPage('admin-users')">User Management</button>
-        `;
-    } else {
-        nav.innerHTML = `
-            <button onclick="showPage('user-add-scrap')">Add Entry</button>
-            <button onclick="showPage('user-view-scrap')">My Records</button>
-        `;
-    }
+    nav.innerHTML = currentUser.role === 'admin' 
+        ? `<button onclick="showPage('admin-dashboard')">Dashboard</button>` 
+        : `<button onclick="showPage('user-add-scrap')">New Entry</button>
+           <button onclick="showPage('user-view-scrap')">My Logs</button>`;
 }
 
-// ==========================================
-// 📊 ANALYTICS & CHARTS (ADMIN)
-// ==========================================
-function renderCharts() {
-    const types = ['Garbage', 'Carton', 'Waste Pallet', 'Pallet'];
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    
-    // Data processing
-    const monthlyData = months.map((m, i) => records.filter(r => new Date(r.date).getMonth() === i).reduce((s, r) => s + Number(r.qty), 0));
-    const typeCounts = types.map(t => records.filter(r => r.type === t).reduce((s, r) => s + Number(r.qty), 0));
-    const sorted = types.map((t, i) => ({ n: t, v: typeCounts[i] })).sort((a, b) => b.v - a.v);
-    const userList = [...new Set(records.map(r => r.owner))];
-    const userData = userList.map(u => records.filter(r => r.owner === u).reduce((s, r) => s + Number(r.qty), 0));
-
-    // Reset Charts
-    Object.values(charts).forEach(c => c.destroy());
-
-    // Initialize Charts
-    charts.m = new Chart(document.getElementById('monthlyTrendChart'), { type: 'line', data: { labels: months, datasets: [{ label: 'Volume', data: monthlyData, borderColor: '#00205B', fill: true, backgroundColor: 'rgba(0,32,91,0.1)' }] } });
-    charts.t = new Chart(document.getElementById('scrapQtyChart'), { type: 'bar', data: { labels: types, datasets: [{ label: 'Qty', data: typeCounts, backgroundColor: '#E60012' }] } });
-    charts.r = new Chart(document.getElementById('rankChart'), { type: 'doughnut', data: { labels: sorted.map(x=>x.n), datasets: [{ data: sorted.map(x=>x.v), backgroundColor: ['#00205B', '#E60012', '#D1D1D1', '#333'] }] } });
-    charts.u = new Chart(document.getElementById('userPerformanceChart'), { type: 'bar', data: { labels: userList, datasets: [{ label: 'Performance', data: userData, backgroundColor: '#28a745' }] }, options: { indexAxis: 'y' } });
+function showPage(id) {
+    document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    if (id === 'admin-dashboard') renderCharts();
+    if (id === 'user-view-scrap' || id === 'admin-dashboard') renderTables();
 }
 
-// ==========================================
-// 📝 DATA MANAGEMENT (ADD, EDIT, DELETE)
-// ==========================================
-
-// --- ADD RECORD ---
+// 2. ADD & DELETE LOGIC
 document.getElementById('scrap-form').onsubmit = (e) => {
     e.preventDefault();
-    const newEntry = {
+    const entry = {
         id: Date.now(),
-        owner: currentUser.username,
+        owner: currentUser.name,
         date: document.getElementById('date').value,
         personnel: document.getElementById('personnel').value,
         qty: parseInt(document.getElementById('qty').value),
         type: document.getElementById('scrap-type').value
     };
-
-    records.push(newEntry);
+    records.push(entry);
     localStorage.setItem('scrap_db', JSON.stringify(records));
-    
-    alert("🚀 Success: Data has been recorded!");
+    alert("🚀 Success: Record added!");
     e.target.reset();
     showPage('user-view-scrap');
 };
 
-// --- DELETE RECORD ---
 function deleteRec(id) {
-    if (confirm("❓ Delete this record permanently?")) {
+    if (confirm("❓ Sigurado ka bang gusto mo itong burahin?")) {
         records = records.filter(r => r.id !== id);
         localStorage.setItem('scrap_db', JSON.stringify(records));
-        alert("🗑️ Record deleted.");
-        renderUserRecords();
+        alert("🗑️ Record deleted successfully.");
+        renderTables();
     }
 }
 
-// --- ADMIN: USER MANAGEMENT ---
-function addUser() {
-    const n = document.getElementById('new-name').value;
-    const u = document.getElementById('new-username').value;
-    const r = document.getElementById('new-role').value;
+// 3. CHARTS RENDERING
+function renderCharts() {
+    const ctxTrend = document.getElementById('monthlyTrendChart').getContext('2d');
+    const ctxType = document.getElementById('scrapQtyChart').getContext('2d');
 
-    if(!n || !u) return alert("⚠️ Please fill all fields.");
+    if(charts.t) charts.t.destroy();
+    if(charts.q) charts.q.destroy();
 
-    users.push({ username: u, pass: '1234', name: n, role: r, status: 'Approved' });
-    localStorage.setItem('envi_users', JSON.stringify(users));
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthlyVals = months.map((m, i) => records.filter(r => new Date(r.date).getMonth() === i).reduce((s, r) => s + r.qty, 0));
+
+    charts.t = new Chart(ctxTrend, {
+        type: 'line',
+        data: { labels: months, datasets: [{ label: 'Volume', data: monthlyVals, borderColor: '#E60012', fill: true, backgroundColor: 'rgba(230,0,18,0.05)' }] }
+    });
+
+    const types = ['Garbage', 'Carton', 'Waste Pallet', 'Pallet'];
+    const typeVals = types.map(t => records.filter(r => r.type === t).reduce((s, r) => s + r.qty, 0));
+
+    charts.q = new Chart(ctxType, {
+        type: 'bar',
+        data: { labels: types, datasets: [{ label: 'Qty', data: typeVals, backgroundColor: '#00205B' }] }
+    });
+}
+
+function renderTables() {
+    const list = document.getElementById('scrap-list');
+    const adminList = document.getElementById('admin-all-records');
     
-    alert(`👤 User Created: ${n}. Default password is '1234'.`);
-    renderUserList();
+    if(list) list.innerHTML = records.filter(r => r.owner === currentUser.name).map(r => `<tr><td>${r.date}</td><td>${r.type}</td><td>${r.qty}</td><td><button onclick="deleteRec(${r.id})">❌</button></td></tr>`).join('');
+    if(adminList) adminList.innerHTML = records.map(r => `<tr><td>${r.date}</td><td>${r.owner}</td><td>${r.type}</td><td>${r.qty}</td></tr>`).join('');
 }
 
-function updateStatus(i, v) {
-    users[i].status = v;
-    localStorage.setItem('envi_users', JSON.stringify(users));
-    alert("🔄 Account status updated.");
-}
-
-function deleteUser(i) {
-    if (confirm("⚠️ Remove this user account?")) {
-        users.splice(i, 1);
-        localStorage.setItem('envi_users', JSON.stringify(users));
-        alert("🗑️ User removed.");
-        renderUserList();
-    }
-}
-
-// ==========================================
-// 📋 TABLES RENDERING
-// ==========================================
-function renderAdminTable() {
-    document.getElementById('admin-all-records').innerHTML = records.map(r => `
-        <tr><td>${r.date}</td><td>${r.owner}</td><td>${r.type}</td><td>${r.qty}</td></tr>
-    `).join('');
-}
-
-function renderUserRecords() {
-    document.getElementById('scrap-list').innerHTML = records
-        .filter(r => r.owner === currentUser.username)
-        .map(r => `
-            <tr>
-                <td>${r.date}</td><td>${r.personnel}</td><td>${r.type}</td><td>${r.qty}</td>
-                <td><button class="btn-delete" onclick="deleteRec(${r.id})">Delete</button></td>
-            </tr>
-        `).join('');
-}
-
-function renderUserList() {
-    document.getElementById('user-list-body').innerHTML = users.map((u, i) => `
-        <tr>
-            <td>${u.name}</td><td>${u.role}</td>
-            <td>
-                <select onchange="updateStatus(${i}, this.value)">
-                    <option ${u.status=='Approved'?'selected':''}>Approved</option>
-                    <option ${u.status=='Disapproved'?'selected':''}>Disapproved</option>
-                </select>
-            </td>
-            <td><button class="btn-delete" onclick="deleteUser(${i})">Delete</button></td>
-        </tr>
-    `).join('');
-}
-
-// ==========================================
-// 📥 EXCEL EXPORT
-// ==========================================
-function exportToExcel() {
-    let csv = "Date,User,Type,Qty,Personnel\n";
-    records.forEach(r => csv += `${r.date},${r.owner},${r.type},${r.qty},${r.personnel}\n`);
-    const a = document.createElement('a');
-    a.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
-    a.download = 'Yamaha_ENVI_Report.csv';
-    a.click();
-    alert("📥 Report downloaded as CSV.");
-}
+function logout() { location.reload(); }
