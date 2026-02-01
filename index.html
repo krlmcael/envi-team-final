@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yamaha ENVI Team | Operations</title>
+    <title>Yamaha ENVI System | Final Fixed</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -11,9 +11,7 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <div class="brand">
-                <span class="brand-red">YAMAHA</span> <span class="brand-white">ENVI TEAM</span>
-            </div>
+            <div class="brand"><span class="brand-red">YAMAHA</span> ENVI</div>
             <div id="nav-links" class="nav-menu"></div>
             <button id="logout-btn" class="hidden btn-logout" onclick="logout()">Logout</button>
         </div>
@@ -22,62 +20,48 @@
     <main class="container">
         <section id="login-section" class="card-auth">
             <h1>System Login</h1>
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" id="login-user" placeholder="Enter Username">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="login-pass" placeholder="Enter Password">
-            </div>
+            <input type="text" id="login-user" placeholder="Username">
+            <input type="password" id="login-pass" placeholder="Password">
             <button class="btn-primary" onclick="login()">Sign In</button>
         </section>
 
         <section id="admin-dashboard" class="hidden">
-            <div class="section-header">
-                <h2>Operational Analytics</h2>
-                <button class="btn-success">📥 Export CSV</button>
-            </div>
+            <div class="section-header"><h2>Operational Analytics</h2></div>
             <div class="charts-grid">
-                <div class="chart-box"><h3>Monthly Trend</h3><canvas id="monthlyTrendChart"></canvas></div>
-                <div class="chart-box"><h3>Scrap Distribution</h3><canvas id="scrapQtyChart"></canvas></div>
-                <div class="chart-box"><h3>Ranking</h3><canvas id="rankChart"></canvas></div>
-                <div class="chart-box"><h3>User Performance</h3><canvas id="userPerformanceChart"></canvas></div>
+                <div class="chart-box">
+                    <h3>Scrap Volume (kg)</h3>
+                    <canvas id="scrapQtyChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h3>Personnel Contribution</h3>
+                    <canvas id="userPerformanceChart"></canvas>
+                </div>
             </div>
         </section>
 
         <section id="admin-users" class="hidden">
-            <div class="section-header"><h2>Account Management</h2></div>
             <div class="card-entry">
-                <h3>Create New Personnel Account</h3>
+                <h3>Account Management</h3>
                 <div class="form-grid-padded">
+                    <div class="form-group"><label>Full Name</label><input type="text" id="new-name"></div>
+                    <div class="form-group"><label>Username</label><input type="text" id="new-username"></div>
                     <div class="form-group">
-                        <label>Full Name</label>
-                        <input type="text" id="new-name" placeholder="Full Name">
-                    </div>
-                    <div class="form-group">
-                        <label>Username</label>
-                        <input type="text" id="new-username" placeholder="Username">
-                    </div>
-                    <div class="form-group">
-                        <label>System Role</label>
+                        <label>Role</label>
                         <select id="new-role">
                             <option value="" disabled selected>Select Role</option>
-                            <option value="Scrap 1 Personnel">Scrap 1 Personnel</option>
-                            <option value="Scrap 2 Personnel">Scrap 2 Personnel</option>
-                            <option value="Waste Hazard">Waste Hazard</option>
+                            <option value="Scrap 1">Scrap 1 Personnel</option>
+                            <option value="Scrap 2">Scrap 2 Personnel</option>
+                            <option value="Waste">Waste Hazard</option>
                         </select>
                     </div>
                 </div>
-                <button class="btn-primary" style="width:auto; padding: 12px 30px;" onclick="addUser()">Create Account</button>
+                <button class="btn-primary" onclick="addUser()">Create Account</button>
             </div>
             <div class="table-card">
-                <div class="table-responsive">
-                    <table>
-                        <thead><tr><th>NAME</th><th>ROLE</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
-                        <tbody id="user-list-body"></tbody>
-                    </table>
-                </div>
+                <table>
+                    <thead><tr><th>NAME</th><th>ROLE</th><th>STATUS</th><th>ACTION</th></tr></thead>
+                    <tbody id="user-list-body"></tbody>
+                </table>
             </div>
         </section>
 
@@ -87,14 +71,12 @@
                 <form id="scrap-form">
                     <div class="form-grid-padded">
                         <div class="form-group"><label>Date</label><input type="date" id="date" required></div>
-                        <div class="form-group"><label>Personnel Name</label><input type="text" id="personnel" required></div>
                         <div class="form-group"><label>Quantity</label><input type="number" id="qty" required></div>
                         <div class="form-group">
-                            <label>Scrap Type</label>
+                            <label>Type</label>
                             <select id="scrap-type">
                                 <option value="Garbage">Garbage</option>
                                 <option value="Carton">Carton</option>
-                                <option value="Waste Pallet">Waste Pallet</option>
                                 <option value="Pallet">Pallet</option>
                             </select>
                         </div>
@@ -107,12 +89,10 @@
         <section id="user-view-scrap" class="hidden">
             <div class="table-card">
                 <h2>My Activity Logs</h2>
-                <div class="table-responsive">
-                    <table>
-                        <thead><tr><th>Date</th><th>Type</th><th>Qty</th><th>Action</th></tr></thead>
-                        <tbody id="scrap-list-body"></tbody>
-                    </table>
-                </div>
+                <table>
+                    <thead><tr><th>Date</th><th>Type</th><th>Qty</th><th>Action</th></tr></thead>
+                    <tbody id="scrap-list-body"></tbody>
+                </table>
             </div>
         </section>
     </main>
