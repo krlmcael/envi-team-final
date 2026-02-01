@@ -36,7 +36,7 @@
         <section id="admin-dashboard" class="hidden">
             <div class="section-header">
                 <h2>Operational Analytics</h2>
-                <button onclick="exportToExcel()" class="btn-success">📥 Export CSV</button>
+                <button class="btn-success">📥 Export CSV</button>
             </div>
             <div class="charts-grid">
                 <div class="chart-box"><h3>Monthly Trend</h3><canvas id="monthlyTrendChart"></canvas></div>
@@ -53,11 +53,11 @@
                 <div class="form-grid-padded">
                     <div class="form-group">
                         <label>Full Name</label>
-                        <input type="text" id="new-name" placeholder="Ex: JUAN DELA CRUZ">
+                        <input type="text" id="new-name" placeholder="Full Name">
                     </div>
                     <div class="form-group">
                         <label>Username</label>
-                        <input type="text" id="new-username" placeholder="Ex: JUAN123">
+                        <input type="text" id="new-username" placeholder="Username">
                     </div>
                     <div class="form-group">
                         <label>System Role</label>
@@ -65,11 +65,11 @@
                             <option value="" disabled selected>Select Role</option>
                             <option value="Scrap 1 Personnel">Scrap 1 Personnel</option>
                             <option value="Scrap 2 Personnel">Scrap 2 Personnel</option>
-                            <option value="Waste Hazard Personnel">Waste Hazard Personnel</option>
+                            <option value="Waste Hazard">Waste Hazard</option>
                         </select>
                     </div>
                 </div>
-                <button class="btn-primary" style="width: auto; padding: 12px 30px;" onclick="addUser()">Create Account</button>
+                <button class="btn-primary" style="width:auto; padding: 12px 30px;" onclick="addUser()">Create Account</button>
             </div>
             <div class="table-card">
                 <div class="table-responsive">
@@ -110,7 +110,7 @@
                 <div class="table-responsive">
                     <table>
                         <thead><tr><th>Date</th><th>Type</th><th>Qty</th><th>Action</th></tr></thead>
-                        <tbody id="scrap-list"></tbody>
+                        <tbody id="scrap-list-body"></tbody>
                     </table>
                 </div>
             </div>
