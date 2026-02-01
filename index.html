@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yamaha ENVI Team | Operations Dashboard</title>
+    <title>Yamaha ENVI Team | Operations</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -22,7 +22,6 @@
     <main class="container">
         <section id="login-section" class="card-auth">
             <h1>System Login</h1>
-            <p>Please enter your credentials</p>
             <div class="form-group">
                 <label>Username</label>
                 <input type="text" id="login-user" placeholder="Enter Username">
@@ -37,22 +36,13 @@
         <section id="admin-dashboard" class="hidden">
             <div class="section-header">
                 <h2>Operational Analytics</h2>
-                <button onclick="exportToExcel()" class="btn-success">📥 Export CSV Report</button>
+                <button onclick="exportToExcel()" class="btn-success">📥 Export CSV</button>
             </div>
             <div class="charts-grid">
                 <div class="chart-box"><h3>Monthly Trend</h3><canvas id="monthlyTrendChart"></canvas></div>
                 <div class="chart-box"><h3>Scrap Distribution</h3><canvas id="scrapQtyChart"></canvas></div>
                 <div class="chart-box"><h3>Ranking</h3><canvas id="rankChart"></canvas></div>
                 <div class="chart-box"><h3>User Performance</h3><canvas id="userPerformanceChart"></canvas></div>
-            </div>
-            <div class="table-card">
-                <h3>Global Audit Logs</h3>
-                <div class="table-responsive">
-                    <table>
-                        <thead><tr><th>Date</th><th>Recorded By</th><th>Type</th><th>Qty</th></tr></thead>
-                        <tbody id="admin-all-records"></tbody>
-                    </table>
-                </div>
             </div>
         </section>
 
@@ -63,11 +53,11 @@
                 <div class="form-grid-padded">
                     <div class="form-group">
                         <label>Full Name</label>
-                        <input type="text" id="new-name" placeholder="Ex: Juan Dela Cruz">
+                        <input type="text" id="new-name" placeholder="Ex: JUAN DELA CRUZ">
                     </div>
                     <div class="form-group">
                         <label>Username</label>
-                        <input type="text" id="new-username" placeholder="Ex: juan_env">
+                        <input type="text" id="new-username" placeholder="Ex: JUAN123">
                     </div>
                     <div class="form-group">
                         <label>System Role</label>
@@ -84,7 +74,7 @@
             <div class="table-card">
                 <div class="table-responsive">
                     <table>
-                        <thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+                        <thead><tr><th>NAME</th><th>ROLE</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
                         <tbody id="user-list-body"></tbody>
                     </table>
                 </div>
@@ -100,7 +90,7 @@
                         <div class="form-group"><label>Personnel Name</label><input type="text" id="personnel" required></div>
                         <div class="form-group"><label>Quantity</label><input type="number" id="qty" required></div>
                         <div class="form-group">
-                            <label>Scrap Category</label>
+                            <label>Scrap Type</label>
                             <select id="scrap-type">
                                 <option value="Garbage">Garbage</option>
                                 <option value="Carton">Carton</option>
