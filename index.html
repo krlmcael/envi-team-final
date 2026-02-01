@@ -3,104 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENVI TEAM | Yamaha System</title>
+    <title>Yamaha ENVI Team | Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <nav>
-        <div class="logo-area">
-            <span class="brand-name">ENVI TEAM</span>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <span class="brand-red">YAMAHA</span>
+                <span class="brand-white">ENVI TEAM</span>
+            </div>
+            <div id="nav-links" class="nav-menu"></div>
+            <button id="logout-btn" class="btn-logout hidden" onclick="logout()">Logout</button>
         </div>
-        <div id="nav-links"></div>
-        <button id="logout-btn" class="hidden" onclick="logout()">Logout</button>
     </nav>
 
-    <div class="container">
-        <section id="login-section" class="card">
-            <h2 style="text-align: center; color: #00205B;">System Login</h2>
-            <input type="text" id="login-user" placeholder="Username">
-            <input type="password" id="login-pass" placeholder="Password">
+    <main class="container">
+        <section id="login-section" class="auth-card">
+            <h2>System Login</h2>
+            <p>Enter your credentials to manage scrap data</p>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="login-user" placeholder="Admin or User ID">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="login-pass" placeholder="••••••••">
+            </div>
             <button class="btn-primary" onclick="login()">Sign In</button>
         </section>
 
         <section id="admin-dashboard" class="hidden">
-            <div class="header-flex">
-                <h2>Admin Analytics Dashboard</h2>
-                <button onclick="exportToExcel()" class="btn-export">📥 Export to Excel</button>
+            <div class="section-header">
+                <h1>Operational Analytics</h1>
+                <button onclick="exportToExcel()" class="btn-success">📥 Export CSV</button>
             </div>
-
+            
             <div class="charts-grid">
-                <div class="chart-box"><h4>Scrap Trend (Per Month)</h4><canvas id="monthlyTrendChart"></canvas></div>
-                <div class="chart-box"><h4>Total Qty per Scrap Type</h4><canvas id="scrapQtyChart"></canvas></div>
-                <div class="chart-box"><h4>Scrap Ranking</h4><canvas id="rankChart"></canvas></div>
-                <div class="chart-box"><h4>User Performance</h4><canvas id="userPerformanceChart"></canvas></div>
+                <div class="chart-box"><h3>Monthly Trend</h3><canvas id="monthlyTrendChart"></canvas></div>
+                <div class="chart-box"><h3>Scrap Distribution</h3><canvas id="scrapQtyChart"></canvas></div>
+                <div class="chart-box"><h3>Ranking</h3><canvas id="rankChart"></canvas></div>
+                <div class="chart-box"><h3>User Contribution</h3><canvas id="userPerformanceChart"></canvas></div>
             </div>
 
-            <h3>Recent Global Records</h3>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr><th>Date</th><th>User Source</th><th>Scrap Type</th><th>Qty</th></tr>
-                    </thead>
-                    <tbody id="admin-all-records"></tbody>
-                </table>
+            <div class="data-table-card">
+                <h3>Global Scrap Logs</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Date</th><th>Recorded By</th><th>Type</th><th>Qty</th></tr></thead>
+                        <tbody id="admin-all-records"></tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
         <section id="admin-users" class="hidden">
-            <h2>User Management</h2>
-            <div class="add-user-box card">
-                <h3>Add New User</h3>
-                <input type="text" id="new-name" placeholder="Full Name">
-                <input type="text" id="new-username" placeholder="Username">
-                <select id="new-role">
-                    <option value="scrap1">Scrap 1 Personnel</option>
-                    <option value="scrap2">Scrap 2 Personnel</option>
-                    <option value="waste">Waste Hazard Personnel</option>
-                </select>
+            <h2>Account Management</h2>
+            <div class="entry-card">
+                <h3>Create New Personnel Account</h3>
+                <div class="form-grid">
+                    <input type="text" id="new-name" placeholder="Full Name">
+                    <input type="text" id="new-username" placeholder="Username">
+                    <select id="new-role">
+                        <option value="scrap1">Scrap 1 Personnel</option>
+                        <option value="scrap2">Scrap 2 Personnel</option>
+                        <option value="waste">Waste Hazard</option>
+                    </select>
+                </div>
                 <button class="btn-primary" onclick="addUser()">Create Account</button>
             </div>
-            <div class="table-container">
+            <div class="data-table-card">
                 <table>
-                    <thead>
-                        <tr><th>Name</th><th>Role</th><th>Status</th><th>Actions</th></tr>
-                    </thead>
+                    <thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
                     <tbody id="user-list-body"></tbody>
                 </table>
             </div>
         </section>
 
         <section id="user-add-scrap" class="hidden">
-            <h2>Add Scrap Record</h2>
-            <form id="scrap-form" class="card">
-                <label>Date:</label><input type="date" id="date" required>
-                <input type="text" id="personnel" placeholder="Personnel Name" required>
-                <input type="number" id="qty" placeholder="Quantity" required>
-                <label>Category:</label>
-                <select id="scrap-type">
-                    <option value="Garbage">Garbage</option>
-                    <option value="Carton">Carton</option>
-                    <option value="Waste Pallet">Waste Pallet</option>
-                    <option value="Pallet">Pallet</option>
-                </select>
-                <button type="submit" class="btn-primary">Submit Record</button>
-            </form>
+            <div class="entry-card">
+                <h2>New Scrap Entry</h2>
+                <form id="scrap-form">
+                    <div class="form-group"><label>Date</label><input type="date" id="date" required></div>
+                    <div class="form-group"><label>Personnel Name</label><input type="text" id="personnel" required></div>
+                    <div class="form-group"><label>Quantity</label><input type="number" id="qty" required></div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="scrap-type">
+                            <option value="Garbage">Garbage</option>
+                            <option value="Carton">Carton</option>
+                            <option value="Waste Pallet">Waste Pallet</option>
+                            <option value="Pallet">Pallet</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">Submit Record</button>
+                </form>
+            </div>
         </section>
 
         <section id="user-view-scrap" class="hidden">
-            <h2>My Recorded Scrap</h2>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr><th>Date</th><th>Personnel</th><th>Type</th><th>Qty</th><th>Actions</th></tr>
-                    </thead>
-                    <tbody id="scrap-list"></tbody>
-                </table>
+            <h2>My Activity Logs</h2>
+            <div class="data-table-card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>Date</th><th>Personnel</th><th>Type</th><th>Qty</th><th>Action</th></tr></thead>
+                        <tbody id="scrap-list"></tbody>
+                    </table>
+                </div>
             </div>
         </section>
-    </div>
-
+    </main>
     <script src="script.js"></script>
 </body>
 </html>
