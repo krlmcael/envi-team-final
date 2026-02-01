@@ -16,7 +16,7 @@ function login() {
         document.getElementById('logout-btn').classList.remove('hidden');
         showPage(found.role === 'admin' ? 'admin-dashboard' : 'user-add-scrap');
         updateNav();
-    } else { alert("Invalid Credentials!"); }
+    } else { alert("Maling Username o Password!"); }
 }
 
 function logout() { location.reload(); }
@@ -36,7 +36,7 @@ function updateNav() {
                          <button onclick="showPage('admin-users')">User Mgmt</button>`;
     } else {
         nav.innerHTML = `<button onclick="showPage('user-add-scrap')">Add Scrap</button>
-                         <button onclick="showPage('user-view-scrap')">View Records</button>`;
+                         <button onclick="showPage('user-view-scrap')">View My Records</button>`;
     }
 }
 
@@ -64,15 +64,16 @@ function renderAdminTable() {
 
 function addUser() {
     const n = document.getElementById('new-name').value, u = document.getElementById('new-username').value, r = document.getElementById('new-role').value;
-    if(!n || !u) return alert("Fill fields!");
+    if(!n || !u) return alert("Kumpletuhin ang fields!");
     users.push({ username: u, pass: '1234', name: n, role: r, status: 'Approved' });
     localStorage.setItem('envi_users', JSON.stringify(users));
-    renderUserList(); alert("User Created! Pass: 1234");
+    renderUserList(); alert("User Created! Default Pass: 1234");
 }
 
 function renderUserList() {
     document.getElementById('user-list-body').innerHTML = users.map((u, i) => `<tr><td>${u.name}</td><td>${u.role}</td><td><select onchange="updateStatus(${i}, this.value)"><option ${u.status=='Approved'?'selected':''}>Approved</option><option ${u.status=='Disapproved'?'selected':''}>Disapproved</option></select></td><td><button class="btn-delete" onclick="deleteUser(${i})">Delete</button></td></tr>`).join('');
 }
+
 function updateStatus(i, v) { users[i].status = v; localStorage.setItem('envi_users', JSON.stringify(users)); }
 function deleteUser(i) { users.splice(i,1); localStorage.setItem('envi_users', JSON.stringify(users)); renderUserList(); }
 
@@ -80,12 +81,13 @@ document.getElementById('scrap-form').onsubmit = (e) => {
     e.preventDefault();
     records.push({ id: Date.now(), owner: currentUser.username, date: document.getElementById('date').value, personnel: document.getElementById('personnel').value, qty: parseInt(document.getElementById('qty').value), type: document.getElementById('scrap-type').value });
     localStorage.setItem('scrap_db', JSON.stringify(records));
-    alert("Saved!"); e.target.reset();
+    alert("Record Saved!"); e.target.reset();
 };
 
 function renderUserRecords() {
     document.getElementById('scrap-list').innerHTML = records.filter(r => r.owner === currentUser.username).map(r => `<tr><td>${r.date}</td><td>${r.personnel}</td><td>${r.type}</td><td>${r.qty}</td><td><button class="btn-delete" onclick="deleteRec(${r.id})">Delete</button></td></tr>`).join('');
 }
+
 function deleteRec(id) { records = records.filter(r => r.id !== id); localStorage.setItem('scrap_db', JSON.stringify(records)); renderUserRecords(); }
 
 function exportToExcel() {
