@@ -1,54 +1,52 @@
 :root {
     --y-blue: #00205B;
     --y-red: #E60012;
-    --dark: #1a1a1a;
-    --glass: rgba(255, 255, 255, 0.9);
-    --shadow: 0 10px 30px rgba(0,0,0,0.08);
+    --bg: #f3f4f6;
+    --white: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
 }
 
-body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f0f2f5; margin: 0; color: var(--dark); }
+* { box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; color: var(--text-main); }
 
-/* Nav Fix */
-.navbar { background: var(--y-blue); padding: 0.8rem 5%; border-bottom: 4px solid var(--y-red); display: flex; justify-content: center; position: sticky; top: 0; z-index: 1000; }
-.nav-container { width: 100%; max-width: 1200px; display: flex; justify-content: space-between; align-items: center; }
-.brand { font-weight: 800; font-size: 1.4rem; letter-spacing: -1px; }
-.y-red { color: var(--y-red); }
-.y-white { color: white; }
+/* Navigation */
+.navbar { background: var(--y-blue); padding: 1rem 5%; border-bottom: 4px solid var(--y-red); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+.nav-container { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1200px; margin: auto; }
+.brand { font-weight: 800; font-size: 1.5rem; letter-spacing: -0.5px; }
+.brand-red { color: var(--y-red); }
+.brand-white { color: white; }
 
-.nav-menu { display: flex; gap: 10px; }
-.nav-menu button { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 0.85rem; }
-.nav-menu button:hover { background: white; color: var(--y-blue); }
-
-/* Attractive Cards */
-.container { max-width: 1100px; margin: 2rem auto; padding: 0 20px; }
-.card-main, .card-login { background: white; border-radius: 20px; padding: 2.5rem; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05); margin-bottom: 1.5rem; }
-.card-login { max-width: 400px; margin: 5rem auto; text-align: center; }
-
-/* Dashboard Pills */
-.dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-.summary-pills { display: flex; gap: 15px; }
-.pill { background: white; padding: 10px 20px; border-radius: 12px; border: 1px solid #eee; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-
-/* Form Design */
-.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 2rem; }
-.form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.85rem; color: #555; }
-input, select { width: 100%; padding: 14px; border: 2px solid #f0f0f0; border-radius: 12px; font-family: inherit; transition: 0.3s; box-sizing: border-box; }
-input:focus { border-color: var(--y-red); outline: none; background: #fff; }
-
-.btn-main { background: var(--y-red); color: white; border: none; padding: 15px 35px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.4s; width: 100%; }
-.btn-main.w-auto { width: auto; }
-.btn-main:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(230,0,18,0.2); }
-
-/* Modern Table */
-.table-responsive { overflow-x: auto; }
-.modern-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
-.modern-table th { background: #f8f9fa; padding: 15px; color: #888; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
-.modern-table td { background: white; padding: 15px; border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; }
-.modern-table tr:hover td { background: #fafafa; }
-
-/* Charts */
-.charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; }
-.chart-card { background: white; padding: 25px; border-radius: 20px; height: 400px; box-shadow: var(--shadow); }
-
+/* Layout */
+.container { max-width: 1200px; margin: 2rem auto; padding: 0 20px; }
 .hidden { display: none !important; }
-.mt-2 { margin-top: 2rem; }
+
+/* Cards */
+.card-auth, .card-entry, .chart-box, .table-card { background: var(--white); padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+.card-auth { max-width: 400px; margin: 5rem auto; text-align: center; }
+
+/* Grid Spacing (Requested Update) */
+.form-grid-padded { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 20px; }
+
+/* Forms */
+.form-group { margin-bottom: 1rem; text-align: left; }
+.form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--text-muted); }
+input, select { width: 100%; padding: 12px 15px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; transition: border-color 0.2s; }
+input:focus { border-color: var(--y-blue); outline: none; box-shadow: 0 0 0 3px rgba(0,32,91,0.1); }
+
+/* Buttons */
+.btn-primary { background: var(--y-red); color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+.btn-primary:hover { background: #b9000e; transform: translateY(-1px); }
+.btn-success { background: #059669; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+.btn-logout { background: transparent; border: 1px solid rgba(255,255,255,0.4); color: white; cursor: pointer; padding: 6px 15px; border-radius: 4px; }
+.btn-logout:hover { background: rgba(255,255,255,0.1); }
+
+/* Tables */
+.table-responsive { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+th, td { padding: 14px; text-align: left; border-bottom: 1px solid #f3f4f6; }
+th { color: var(--y-red); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+.charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+.nav-menu button { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: white; padding: 8px 16px; border-radius: 6px; margin-left: 10px; cursor: pointer; transition: 0.2s; }
+.nav-menu button:hover { background: white; color: var(--y-blue); }
