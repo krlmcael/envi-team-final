@@ -10,7 +10,7 @@
 <body>
     <nav>
         <div class="logo-area">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Yamaha_Motor_Logo.svg" alt="Yamaha Logo" width="100">
+            <img src="OIP.jpg" alt="Yamaha Logo" width="120">
             <span class="brand-name">ENVI TEAM</span>
         </div>
         <div id="nav-links"></div>
@@ -19,10 +19,14 @@
 
     <div class="container">
         <section id="login-section" class="card">
-            <h2>System Login</h2>
-            <input type="text" id="login-user" placeholder="Username">
-            <input type="password" id="login-pass" placeholder="Password">
-            <button class="btn-primary" onclick="login()">Sign In</button>
+            <h2 style="color: var(--y-blue); text-align: center;">System Login</h2>
+            <div class="login-form">
+                <label>Username</label>
+                <input type="text" id="login-user" placeholder="Enter Username">
+                <label>Password</label>
+                <input type="password" id="login-pass" placeholder="Enter Password">
+                <button class="btn-primary" onclick="login()">Sign In</button>
+            </div>
         </section>
 
         <section id="admin-dashboard" class="hidden">
@@ -45,7 +49,7 @@
                     <canvas id="rankChart"></canvas>
                 </div>
                 <div class="chart-box">
-                    <h4>User Performance</h4>
+                    <h4>User Performance (Contribution)</h4>
                     <canvas id="userPerformanceChart"></canvas>
                 </div>
             </div>
@@ -54,7 +58,12 @@
             <div class="table-container">
                 <table>
                     <thead>
-                        <tr><th>Date</th><th>User Source</th><th>Scrap Type</th><th>Qty</th></tr>
+                        <tr>
+                            <th>Date</th>
+                            <th>User Source</th>
+                            <th>Scrap Type</th>
+                            <th>Qty</th>
+                        </tr>
                     </thead>
                     <tbody id="admin-all-records"></tbody>
                 </table>
@@ -63,55 +72,76 @@
 
         <section id="admin-users" class="hidden">
             <h2>User Management</h2>
-            <div class="add-user-box card">
-                <h3>Add New User</h3>
-                <input type="text" id="new-name" placeholder="Full Name">
-                <input type="text" id="new-username" placeholder="Username">
+            <div class="add-user-box card" style="border: 1px solid #ddd;">
+                <h3>Add New User Account</h3>
+                <input type="text" id="new-name" placeholder="Full Name (e.g. Juan Dela Cruz)">
+                <input type="text" id="new-username" placeholder="Desired Username">
+                <label>Assign Role:</label>
                 <select id="new-role">
-                    <option value="scrap1">Scrap 1</option>
-                    <option value="scrap2">Scrap 2</option>
-                    <option value="waste">Waste Hazard</option>
+                    <option value="scrap1">Scrap 1 Personnel</option>
+                    <option value="scrap2">Scrap 2 Personnel</option>
+                    <option value="waste">Waste Hazard Personnel</option>
                 </select>
                 <button class="btn-primary" onclick="addUser()">Create Account</button>
             </div>
-            <table>
-                <thead>
-                    <tr><th>Name</th><th>Role</th><th>Status</th><th>Actions</th></tr>
-                </thead>
-                <tbody id="user-list-body"></tbody>
-            </table>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-list-body"></tbody>
+                </table>
+            </div>
         </section>
 
         <section id="user-add-scrap" class="hidden">
-            <h2>Add Scrap Record</h2>
-            <form id="scrap-form" class="card">
+            <h2>Add New Scrap Entry</h2>
+            <form id="scrap-form" class="card" style="border-top: 5px solid var(--y-blue);">
                 <label>Date of Record:</label>
                 <input type="date" id="date" required>
-                <input type="text" id="personnel" placeholder="Assign Personnel Name" required>
-                <input type="number" id="qty" placeholder="Quantity (Count)" required>
-                <label>Select Scrap Category:</label>
+                
+                <label>Assign Personnel:</label>
+                <input type="text" id="personnel" placeholder="Name of Personnel" required>
+                
+                <label>Quantity (Count):</label>
+                <input type="number" id="qty" placeholder="Enter total quantity" required>
+                
+                <label>Scrap Category:</label>
                 <select id="scrap-type">
                     <option value="Garbage">Garbage</option>
                     <option value="Carton">Carton</option>
                     <option value="Waste Pallet">Waste Pallet</option>
                     <option value="Pallet">Pallet</option>
                 </select>
-                <button type="submit" class="btn-primary">Submit Record</button>
+                <button type="submit" class="btn-primary" style="margin-top: 15px;">🚀 Submit Record</button>
             </form>
         </section>
 
         <section id="user-view-scrap" class="hidden">
-            <h2>My Recorded Scrap</h2>
+            <h2>My Recorded Entries</h2>
             <div class="table-container">
                 <table>
                     <thead>
-                        <tr><th>Date</th><th>Personnel</th><th>Type</th><th>Qty</th><th>Actions</th></tr>
+                        <tr>
+                            <th>Date</th>
+                            <th>Personnel</th>
+                            <th>Type</th>
+                            <th>Qty</th>
+                            <th>Actions</th>
+                        </tr>
                     </thead>
                     <tbody id="scrap-list"></tbody>
                 </table>
             </div>
         </section>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
