@@ -1,4 +1,3 @@
-// --- SYSTEM DATA ---
 let users = JSON.parse(localStorage.getItem('envi_users')) || [
     { username: 'admin', pass: 'admin123', name: 'System Admin', role: 'admin', status: 'Approved' }
 ];
@@ -6,21 +5,21 @@ let records = JSON.parse(localStorage.getItem('scrap_db')) || [];
 let currentUser = null;
 let charts = {};
 
-// --- AUTHENTICATION ---
+// LOGIN
 function login() {
     const u = document.getElementById('login-user').value;
     const p = document.getElementById('login-pass').value;
     const found = users.find(user => user.username === u && user.pass === p);
 
     if (found) {
-        if (found.status === 'Disapproved') return alert("❌ Account Deactivated. Contact Admin.");
+        if (found.status === 'Disapproved') return alert("❌ Account Deactivated.");
         currentUser = found;
-        alert(`✅ Welcome back, ${found.name}! Login successful.`);
+        alert(`✅ Welcome ${found.name}!`);
         document.getElementById('login-section').classList.add('hidden');
         document.getElementById('logout-btn').classList.remove('hidden');
         updateNav();
         showPage(found.role === 'admin' ? 'admin-dashboard' : 'user-add-scrap');
-    } else { alert("⚠️ Invalid credentials. Please try again."); }
+    } else { alert("❌ Invalid Login."); }
 }
 
 function updateNav() {
@@ -34,68 +33,47 @@ function updateNav() {
 
 function showPage(id) {
     document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
-    const target = document.getElementById(id);
-    if(target) target.classList.remove('hidden');
-    
+    document.getElementById(id).classList.remove('hidden');
     if (id === 'admin-dashboard') renderCharts();
     if (id === 'admin-users') renderUserList();
     renderTables();
 }
 
-// --- DATA ENTRY LOGIC ---
+// SCRAP DATA LOGIC
 document.getElementById('scrap-form').onsubmit = (e) => {
     e.preventDefault();
-    const entry = {
-        id: Date.now(),
-        owner: currentUser.name,
-        date: document.getElementById('date').value,
-        personnel: document.getElementById('personnel').value,
-        qty: parseInt(document.getElementById('qty').value),
-        type: document.getElementById('scrap-type').value
-    };
-    records.push(entry);
+    records.push({ 
+        id: Date.now(), 
+        owner: currentUser.name, 
+        date: document.getElementById('date').value, 
+        personnel: document.getElementById('personnel').value, 
+        qty: parseInt(document.getElementById('qty').value), 
+        type: document.getElementById('scrap-type').value 
+    });
     localStorage.setItem('scrap_db', JSON.stringify(records));
-    alert("🚀 Success: New record committed to database!");
+    alert("🚀 Success: Record Added!");
     e.target.reset();
     showPage('user-view-scrap');
 };
 
 function deleteRec(id) {
-    if (confirm("❓ Are you sure you want to delete this record?")) {
+    if (confirm("❓ Delete this record?")) {
         records = records.filter(r => r.id !== id);
         localStorage.setItem('scrap_db', JSON.stringify(records));
-        alert("🗑️ Record deleted.");
+        alert("🗑️ Deleted.");
         renderTables();
-        if(document.getElementById('admin-dashboard').classList.contains('hidden') === false) renderCharts();
     }
 }
 
-// --- USER MANAGEMENT & AUTO-RESET ---
+// USER MANAGEMENT LOGIC
 function addUser() {
-    const nameBox = document.getElementById('new-name');
-    const userBox = document.getElementById('new-username');
-    const roleBox = document.getElementById('new-role');
-
-    if(!nameBox.value || !userBox.value || !roleBox.value) {
-        return alert("⚠️ Please fill in all fields.");
-    }
-
-    users.push({ 
-        username: userBox.value, 
-        pass: '1234', 
-        name: nameBox.value, 
-        role: roleBox.value, 
-        status: 'Approved' 
-    });
-    
+    const n = document.getElementById('new-name').value;
+    const u = document.getElementById('new-username').value;
+    const r = document.getElementById('new-role').value;
+    if(!n || !u) return alert("⚠️ Fill all fields.");
+    users.push({ username: u, pass: '1234', name: n, role: r, status: 'Approved' });
     localStorage.setItem('envi_users', JSON.stringify(users));
-    alert(`👤 User Created: ${nameBox.value} successfully registered.`);
-
-    // --- RESET FIELDS ---
-    nameBox.value = "";
-    userBox.value = "";
-    roleBox.selectedIndex = 0;
-
+    alert("👤 User Created! Default pass: 1234");
     renderUserList();
 }
 
@@ -112,25 +90,14 @@ function renderUserList() {
                     <option ${u.status=='Disapproved'?'selected':''}>Disapproved</option>
                 </select>
             </td>
-            <td><button class="btn-primary" style="padding:5px 10px; background:#444;" onclick="deleteUser(${i})">Delete</button></td>
+            <td><button onclick="deleteUser(${i})">❌</button></td>
         </tr>`).join('');
 }
 
-function updateStatus(i, v) { 
-    users[i].status = v; 
-    localStorage.setItem('envi_users', JSON.stringify(users)); 
-    alert("🔄 Account status updated."); 
-}
+function updateStatus(i, v) { users[i].status = v; localStorage.setItem('envi_users', JSON.stringify(users)); alert("🔄 Updated."); }
+function deleteUser(i) { if(confirm("Delete user?")) { users.splice(i,1); localStorage.setItem('envi_users', JSON.stringify(users)); renderUserList(); } }
 
-function deleteUser(i) { 
-    if(confirm("Delete this user account?")) { 
-        users.splice(i,1); 
-        localStorage.setItem('envi_users', JSON.stringify(users)); 
-        renderUserList(); 
-    } 
-}
-
-// --- TABLES & CHARTS ---
+// RENDER TABLES & CHARTS
 function renderTables() {
     const list = document.getElementById('scrap-list');
     const adminList = document.getElementById('admin-all-records');
@@ -141,14 +108,11 @@ function renderTables() {
 function renderCharts() {
     const types = ['Garbage', 'Carton', 'Waste Pallet', 'Pallet'];
     const typeVals = types.map(t => records.filter(r => r.type === t).reduce((s, r) => s + r.qty, 0));
-    
-    const ctx = document.getElementById('scrapQtyChart').getContext('2d');
     if(charts.q) charts.q.destroy();
-    charts.q = new Chart(ctx, { 
+    charts.q = new Chart(document.getElementById('scrapQtyChart'), { 
         type: 'bar', 
-        data: { labels: types, datasets: [{ label: 'Quantity', data: typeVals, backgroundColor: '#00205B' }] },
-        options: { responsive: true, maintainAspectRatio: false }
+        data: { labels: types, datasets: [{ label: 'Qty', data: typeVals, backgroundColor: '#00205B' }] } 
     });
 }
 
-function logout() { if(confirm("Are you sure you want to sign out?")) location.reload(); }
+function logout() { if(confirm("Sign out?")) location.reload(); }
