@@ -10,7 +10,6 @@
 <body>
     <nav>
         <div class="logo-area">
-            <img src="C:\Users\Quinbie Marasigan\Downloads\OIP.jpg" alt="Yamaha Logo" style="width: 150px; height: auto; display: block;" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/8/8b/Yamaha_Motor_Logo.svg'">
             <span class="brand-name">ENVI TEAM</span>
         </div>
         <div id="nav-links"></div>
@@ -32,10 +31,10 @@
             </div>
 
             <div class="charts-grid">
-                <div class="chart-box"><h4>Scrap Trend</h4><canvas id="monthlyTrendChart"></canvas></div>
-                <div class="chart-box"><h4>Total Qty</h4><canvas id="scrapQtyChart"></canvas></div>
-                <div class="chart-box"><h4>Ranking</h4><canvas id="rankChart"></canvas></div>
-                <div class="chart-box"><h4>Performance</h4><canvas id="userPerformanceChart"></canvas></div>
+                <div class="chart-box"><h4>Scrap Trend (Per Month)</h4><canvas id="monthlyTrendChart"></canvas></div>
+                <div class="chart-box"><h4>Total Qty per Scrap Type</h4><canvas id="scrapQtyChart"></canvas></div>
+                <div class="chart-box"><h4>Scrap Ranking</h4><canvas id="rankChart"></canvas></div>
+                <div class="chart-box"><h4>User Performance</h4><canvas id="userPerformanceChart"></canvas></div>
             </div>
 
             <h3>Recent Global Records</h3>
@@ -52,12 +51,13 @@
         <section id="admin-users" class="hidden">
             <h2>User Management</h2>
             <div class="add-user-box card">
+                <h3>Add New User</h3>
                 <input type="text" id="new-name" placeholder="Full Name">
                 <input type="text" id="new-username" placeholder="Username">
                 <select id="new-role">
-                    <option value="scrap1">Scrap 1</option>
-                    <option value="scrap2">Scrap 2</option>
-                    <option value="waste">Waste Hazard</option>
+                    <option value="scrap1">Scrap 1 Personnel</option>
+                    <option value="scrap2">Scrap 2 Personnel</option>
+                    <option value="waste">Waste Hazard Personnel</option>
                 </select>
                 <button class="btn-primary" onclick="addUser()">Create Account</button>
             </div>
@@ -74,9 +74,10 @@
         <section id="user-add-scrap" class="hidden">
             <h2>Add Scrap Record</h2>
             <form id="scrap-form" class="card">
-                <input type="date" id="date" required>
+                <label>Date:</label><input type="date" id="date" required>
                 <input type="text" id="personnel" placeholder="Personnel Name" required>
                 <input type="number" id="qty" placeholder="Quantity" required>
+                <label>Category:</label>
                 <select id="scrap-type">
                     <option value="Garbage">Garbage</option>
                     <option value="Carton">Carton</option>
