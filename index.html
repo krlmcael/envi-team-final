@@ -3,113 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yamaha ENVI Team | Operations</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Yamaha ENVI | Operations System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <div class="brand">
-                <span class="brand-red">YAMAHA</span> <span class="brand-white">ENVI TEAM</span>
-            </div>
+            <div class="brand"><span class="y-red">YAMAHA</span> <span class="y-white">ENVI</span></div>
             <div id="nav-links" class="nav-menu"></div>
-            <button id="logout-btn" class="hidden btn-logout" onclick="logout()">Logout</button>
+            <div class="nav-meta">
+                <span id="live-clock"></span>
+                <button id="logout-btn" class="hidden btn-logout" onclick="logout()">Logout</button>
+            </div>
         </div>
     </nav>
 
     <main class="container">
-        <section id="login-section" class="card-auth">
-            <h1>System Login</h1>
+        <section id="login-section" class="card-login">
+            <h2>System Login</h2>
             <div class="form-group">
                 <label>Username</label>
-                <input type="text" id="login-user" placeholder="Enter Username">
+                <input type="text" id="login-user" placeholder="Enter username">
             </div>
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" id="login-pass" placeholder="Enter Password">
+                <input type="password" id="login-pass" placeholder="••••••••">
             </div>
-            <button class="btn-primary" onclick="login()">Sign In</button>
+            <button class="btn-main" onclick="login()">Sign In</button>
         </section>
 
         <section id="admin-dashboard" class="hidden">
-            <div class="section-header">
-                <h2>Operational Analytics</h2>
-                <button onclick="exportToExcel()" class="btn-success">📥 Export CSV</button>
+            <div class="dash-header">
+                <h2>Operational Dashboard</h2>
+                <div class="summary-pills">
+                    <div class="pill">Total: <b id="adm-total-qty">0</b> kg</div>
+                    <div class="pill">Users: <b id="adm-active-users">0</b></div>
+                </div>
             </div>
             <div class="charts-grid">
-                <div class="chart-box"><h3>Monthly Trend</h3><canvas id="monthlyTrendChart"></canvas></div>
-                <div class="chart-box"><h3>Scrap Distribution</h3><canvas id="scrapQtyChart"></canvas></div>
-                <div class="chart-box"><h3>Ranking</h3><canvas id="rankChart"></canvas></div>
-                <div class="chart-box"><h3>User Performance</h3><canvas id="userPerformanceChart"></canvas></div>
-            </div>
-            <div class="table-card">
-                <h3>Global Audit Logs</h3>
-                <div class="table-responsive">
-                    <table>
-                        <thead><tr><th>Date</th><th>Recorded By</th><th>Type</th><th>Qty</th></tr></thead>
-                        <tbody id="admin-all-records"></tbody>
-                    </table>
-                </div>
+                <div class="chart-card"><h3>Scrap Distribution</h3><canvas id="scrapQtyChart"></canvas></div>
+                <div class="chart-card"><h3>Performance Trend</h3><canvas id="trendChart"></canvas></div>
             </div>
         </section>
 
         <section id="admin-users" class="hidden">
-            <div class="section-header"><h2>Account Management</h2></div>
-            <div class="card-entry">
-                <h3>Create New Personnel Account</h3>
+            <div class="card-main">
+                <h3>Account Management</h3>
                 <div class="form-grid">
-                    <input type="text" id="new-name" placeholder="Full Name">
-                    <input type="text" id="new-username" placeholder="Username">
-                    <select id="new-role">
-                        <option value="scrap1">Scrap 1 Personnel</option>
-                        <option value="scrap2">Scrap 2 Personnel</option>
-                        <option value="waste">Waste Hazard</option>
-                    </select>
+                    <div class="form-group"><label>Full Name</label><input type="text" id="new-name" placeholder="Name"></div>
+                    <div class="form-group"><label>Username</label><input type="text" id="new-username" placeholder="User"></div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="new-role">
+                            <option value="" disabled selected>Select Role</option>
+                            <option value="Scrap 1 Personnel">Scrap 1 Personnel</option>
+                            <option value="Scrap 2 Personnel">Scrap 2 Personnel</option>
+                        </select>
+                    </div>
                 </div>
-                <button class="btn-primary" onclick="addUser()">Create Account</button>
+                <button class="btn-main w-auto" onclick="addUser()">Create Account</button>
             </div>
-            <div class="table-card">
-                <div class="table-responsive">
-                    <table>
-                        <thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
-                        <tbody id="user-list-body"></tbody>
-                    </table>
-                </div>
+            <div class="card-main mt-2">
+                <table class="modern-table">
+                    <thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody id="user-list-body"></tbody>
+                </table>
             </div>
         </section>
 
         <section id="user-add-scrap" class="hidden">
-            <div class="card-entry">
-                <h2>New Data Entry</h2>
+            <div class="card-main">
+                <h2>New Scrap Entry</h2>
                 <form id="scrap-form">
-                    <div class="form-group"><label>Date</label><input type="date" id="date" required></div>
-                    <div class="form-group"><label>Personnel</label><input type="text" id="personnel" required></div>
-                    <div class="form-group"><label>Quantity</label><input type="number" id="qty" required></div>
-                    <div class="form-group">
-                        <label>Category</label>
-                        <select id="scrap-type">
-                            <option value="Garbage">Garbage</option>
-                            <option value="Carton">Carton</option>
-                            <option value="Waste Pallet">Waste Pallet</option>
-                            <option value="Pallet">Pallet</option>
-                        </select>
+                    <div class="form-grid">
+                        <div class="form-group"><label>Date</label><input type="date" id="date" required></div>
+                        <div class="form-group"><label>Quantity (kg)</label><input type="number" id="qty" required></div>
+                        <div class="form-group">
+                            <label>Scrap Type</label>
+                            <select id="scrap-type">
+                                <option value="Garbage">Garbage</option>
+                                <option value="Carton">Carton</option>
+                                <option value="Pallet">Pallet</option>
+                            </select>
+                        </div>
                     </div>
-                    <button type="submit" class="btn-primary">Submit Record</button>
+                    <button type="submit" class="btn-main w-auto">Submit Record</button>
                 </form>
             </div>
         </section>
 
         <section id="user-view-scrap" class="hidden">
-            <div class="table-card">
-                <h2>My Activity Logs</h2>
-                <div class="table-responsive">
-                    <table>
-                        <thead><tr><th>Date</th><th>Type</th><th>Qty</th><th>Action</th></tr></thead>
-                        <tbody id="scrap-list"></tbody>
-                    </table>
+            <div class="card-main">
+                <div class="dash-header">
+                    <h2>My History</h2>
+                    <div class="pill">My Total: <b id="user-total-qty">0</b> kg</div>
                 </div>
+                <table class="modern-table">
+                    <thead><tr><th>Date</th><th>Type</th><th>Qty</th><th>Status</th><th>Action</th></tr></thead>
+                    <tbody id="scrap-list-body"></tbody>
+                </table>
             </div>
         </section>
     </main>
