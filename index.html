@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yamaha ENVI Team System</title>
+    <title>Yamaha ENVI Team | Operations</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -15,7 +15,7 @@
                 <span class="brand-red">YAMAHA</span> <span class="brand-white">ENVI TEAM</span>
             </div>
             <div id="nav-links" class="nav-menu"></div>
-            <button id="logout-btn" class="hidden" onclick="logout()">Logout</button>
+            <button id="logout-btn" class="hidden btn-logout" onclick="logout()">Logout</button>
         </div>
     </nav>
 
@@ -39,10 +39,10 @@
                 <button onclick="exportToExcel()" class="btn-success">📥 Export CSV</button>
             </div>
             <div class="charts-grid">
-                <div class="chart-card"><h3>Monthly Trend</h3><canvas id="monthlyTrendChart"></canvas></div>
-                <div class="chart-card"><h3>Scrap Distribution</h3><canvas id="scrapQtyChart"></canvas></div>
-                <div class="chart-card"><h3>Ranking</h3><canvas id="rankChart"></canvas></div>
-                <div class="chart-card"><h3>User Performance</h3><canvas id="userPerformanceChart"></canvas></div>
+                <div class="chart-box"><h3>Monthly Trend</h3><canvas id="monthlyTrendChart"></canvas></div>
+                <div class="chart-box"><h3>Scrap Distribution</h3><canvas id="scrapQtyChart"></canvas></div>
+                <div class="chart-box"><h3>Ranking</h3><canvas id="rankChart"></canvas></div>
+                <div class="chart-box"><h3>User Performance</h3><canvas id="userPerformanceChart"></canvas></div>
             </div>
             <div class="table-card">
                 <h3>Global Audit Logs</h3>
@@ -50,6 +50,31 @@
                     <table>
                         <thead><tr><th>Date</th><th>Recorded By</th><th>Type</th><th>Qty</th></tr></thead>
                         <tbody id="admin-all-records"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="admin-users" class="hidden">
+            <div class="section-header"><h2>Account Management</h2></div>
+            <div class="card-entry">
+                <h3>Create New Personnel Account</h3>
+                <div class="form-grid">
+                    <input type="text" id="new-name" placeholder="Full Name">
+                    <input type="text" id="new-username" placeholder="Username">
+                    <select id="new-role">
+                        <option value="scrap1">Scrap 1 Personnel</option>
+                        <option value="scrap2">Scrap 2 Personnel</option>
+                        <option value="waste">Waste Hazard</option>
+                    </select>
+                </div>
+                <button class="btn-primary" onclick="addUser()">Create Account</button>
+            </div>
+            <div class="table-card">
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody id="user-list-body"></tbody>
                     </table>
                 </div>
             </div>
@@ -63,7 +88,7 @@
                     <div class="form-group"><label>Personnel</label><input type="text" id="personnel" required></div>
                     <div class="form-group"><label>Quantity</label><input type="number" id="qty" required></div>
                     <div class="form-group">
-                        <label>Scrap Type</label>
+                        <label>Category</label>
                         <select id="scrap-type">
                             <option value="Garbage">Garbage</option>
                             <option value="Carton">Carton</option>
