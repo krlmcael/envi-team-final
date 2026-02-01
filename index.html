@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENVI TEAM | Yamaha System</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="logo-area">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Yamaha_Motor_Logo.svg" alt="Yamaha Logo" width="100">
+            <span class="brand-name">ENVI TEAM</span>
+        </div>
+        <div id="nav-links"></div>
+        <button id="logout-btn" class="hidden" onclick="logout()">Logout</button>
+    </nav>
+
+    <div class="container">
+        <section id="login-section" class="card">
+            <h2>System Login</h2>
+            <input type="text" id="login-user" placeholder="Username">
+            <input type="password" id="login-pass" placeholder="Password">
+            <button class="btn-primary" onclick="login()">Sign In</button>
+        </section>
+
+        <section id="admin-dashboard" class="hidden">
+            <div class="header-flex">
+                <h2>Admin Analytics Dashboard</h2>
+                <button onclick="exportToExcel()" class="btn-export">📥 Export to Excel</button>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-box">
+                    <h4>Scrap Trend (Per Month)</h4>
+                    <canvas id="monthlyTrendChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h4>Total Qty per Scrap Type</h4>
+                    <canvas id="scrapQtyChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h4>Scrap Ranking (Most to Least)</h4>
+                    <canvas id="rankChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h4>User Performance</h4>
+                    <canvas id="userPerformanceChart"></canvas>
+                </div>
+            </div>
+
+            <h3>Recent Global Records</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>Date</th><th>User Source</th><th>Scrap Type</th><th>Qty</th></tr>
+                    </thead>
+                    <tbody id="admin-all-records"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="admin-users" class="hidden">
+            <h2>User Management</h2>
+            <div class="add-user-box card">
+                <h3>Add New User</h3>
+                <input type="text" id="new-name" placeholder="Full Name">
+                <input type="text" id="new-username" placeholder="Username">
+                <select id="new-role">
+                    <option value="scrap1">Scrap 1</option>
+                    <option value="scrap2">Scrap 2</option>
+                    <option value="waste">Waste Hazard</option>
+                </select>
+                <button class="btn-primary" onclick="addUser()">Create Account</button>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Name</th><th>Role</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="user-list-body"></tbody>
+            </table>
+        </section>
+
+        <section id="user-add-scrap" class="hidden">
+            <h2>Add Scrap Record</h2>
+            <form id="scrap-form" class="card">
+                <label>Date of Record:</label>
+                <input type="date" id="date" required>
+                <input type="text" id="personnel" placeholder="Assign Personnel Name" required>
+                <input type="number" id="qty" placeholder="Quantity (Count)" required>
+                <label>Select Scrap Category:</label>
+                <select id="scrap-type">
+                    <option value="Garbage">Garbage</option>
+                    <option value="Carton">Carton</option>
+                    <option value="Waste Pallet">Waste Pallet</option>
+                    <option value="Pallet">Pallet</option>
+                </select>
+                <button type="submit" class="btn-primary">Submit Record</button>
+            </form>
+        </section>
+
+        <section id="user-view-scrap" class="hidden">
+            <h2>My Recorded Scrap</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>Date</th><th>Personnel</th><th>Type</th><th>Qty</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody id="scrap-list"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
